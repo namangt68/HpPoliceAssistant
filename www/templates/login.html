@@ -1,0 +1,58 @@
+<ion-view view-title="Login">
+  
+  <ion-nav-buttons side="left"> <!--What is this and following 3 lines purpose?-->
+  </ion-nav-buttons>  
+  <ion-nav-buttons side="right">
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+    
+    <form name="loginForm" novalidate>
+    <div class="list">
+
+      <label class="item item-input item-select">
+      <div class="input-label">
+        District
+      </div>
+      <select ng-model="selected.district" ng-options="district for district in districts">
+      </select>
+      </label>
+
+      <label class="item item-input item-select">
+      <div class="input-label">
+        Police Staion
+      </div>
+      <select ng-model="selected.police" ng-options="police for police in loginInfo[selected.district]">
+      </select>
+      </label>
+
+      <label class="item item-input item-select">
+      <div class="input-label">
+        Police Post
+      </div>
+      <select ng-model="selected.post">
+        <option>Police Post 1</option>
+        <option>Police Post 2</option>
+        <option>Police Post 3</option>
+      </select>
+      </label>
+
+      <ion-input class="item item-input item-stacked-label">
+        <ion-label>Naka Name</ion-label>
+        <input type="text" ng-model="selected.naka">
+      </ion-input>
+
+      <ion-input class="item item-input item-stacked-label">
+        <ion-label>Password</ion-label>
+        <input type="password" ng-model="selected.password">
+      </ion-input>
+
+      <button class="button button-outline button-block button-positive" ng-click="onLoginSubmit()">
+      Log In
+      </button>
+
+    </div>
+    </form>
+
+  </ion-content>
+</ion-view>

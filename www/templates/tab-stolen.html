@@ -1,0 +1,23 @@
+<ion-view view-title="Stolen Vehicle">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear icon ion-ios-search" ng-click="showFilterBar()">
+    </button>
+  </ion-nav-buttons>
+  
+  <ion-content ng-class="padding">
+
+    <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+    </ion-refresher>
+    
+    <div class="list list-inset" ng-if="vehicles">
+    <!-- <p>Hello</p> -->
+    <a class="item"  ng-repeat="vehicle in vehicles">
+      <h2>{{vehicle.VehicleNumber}}</h2>
+      <p>{{vehicle.VehicleType}} stolen from {{vehicle.LocationType}}</p>
+    </a>
+    </div>
+
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,29 @@
+<!--
+Create tabs with an icon and label, using the tabs-assertive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-positive">
+
+  <!-- Entry Tab -->
+  <ion-tab title="Entry" icon-off="ion-ios-compose" icon-on="ion-ios-compose" href="#/tab/entry">
+    <ion-nav-view name="tab-entry"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Challan Tab -->
+  <ion-tab title="Challan" icon-off="ion-ios-paper" icon-on="ion-ios-paper" href="#/tab/challan">
+    <ion-nav-view name="tab-challan"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Stolen Tab -->
+  <ion-tab title="Stolen" icon-off="ion-ios-unlocked" icon-on="ion-ios-unlocked" href="#/tab/stolen">
+    <ion-nav-view name="tab-stolen"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Search Tab -->
+  <ion-tab title="Search" icon-off="ion-ios-search-strong" icon-on="ion-ios-search-strong" href="#/tab/search">
+    <ion-nav-view name="tab-search"></ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>

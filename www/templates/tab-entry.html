@@ -1,0 +1,49 @@
+<ion-view view-title="Vehicle Entry">
+  <ion-content class="padding">
+
+    <form name="vehicleEntryForm" novalidate>
+    <div class="list">
+
+      <!-- <label class="item item-input item-select">
+      <div class="input-label">
+        Select District
+      </div>
+      <select ng-model="data.district">
+        <option>Police Post 1</option>
+        <option selected>Police Post 2</option>
+        <option>Police Post 3</option>
+      </select>
+      </label> -->
+
+      <!-- <ion-input class="item item-input item-stacked-label">
+        <ion-label>Naka Name</ion-label>
+        <input type="text"  placeholder="NakaXY" ng-model="data.naka">
+      </ion-input> -->
+
+      <ion-input class="item item-input item-stacked-label">
+        <ion-label>Vehicle Number</ion-label>
+        <input type="text" placeholder="Enter vehicle number here" ng-model="data.vehicle">
+      </ion-input>
+      <ion-input class="item item-input item-stacked-label">
+        <ion-label>Phone Number</ion-label>
+        <input type="number" placeholder="Enter 10 digit phone number here" ng-model="data.phone" required>
+      </ion-input>
+      <ion-input class="item item-input item-stacked-label">
+        <ion-label>Description</ion-label>
+        <input type="text" placeholder="Enter any other information here" ng-model="data.info">
+      </ion-input>
+
+      <button class="button button-block button-positive" ng-click="captureImage()">Upload Image</button>
+      <button class="button button-block button-assertive" ng-click="onVehicleEntrySubmit()">Submit</button>
+      
+      <div align="right">
+      <button class="button icon-left ion-log-out button-assertive" ng-click="logout()">
+      Logout</button>
+      </div>
+
+      <img data-ng-src="data:image/jpeg;base64,{{data.image}}" style="max-width: 100%">
+    </div>
+    </form>
+
+  </ion-content>
+</ion-view>
