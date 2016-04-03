@@ -12,9 +12,9 @@ angular.module('starter', ['ionic', 'jett.ionic.filter.bar', 'ngCordova', 'start
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     
-   /*  setTimeout(function() {
-       $cordovaSplashscreen.hide()
-     }, 3000);*/
+     // setTimeout(function() {
+     //   $cordovaSplashscreen.hide()
+     // }, 3000);
 
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);

@@ -372,6 +372,37 @@ angular.module('starter.controllers', ['ngCordova'])
 		}
 	});
 
+
+	$scope.data = {}
+	$scope.search = function(){
+		console.log($scope.data.search)
+
+		if (! $scope.data.search) {
+			console.log('Empty string')
+			return
+		}
+
+		var VehicleEntry = Parse.Object.extend("VehicleEntry");
+		var query = new Parse.Query(VehicleEntry);
+		query.equalTo("vehicleNum", $scope.data.search);
+		query.find({
+			success: function(results) {
+
+				for (var i = results.length - 1; i >= 0; i--) {
+					console.log(i);
+					console.log(results[i].get("description"));
+					console.log(results[i].get("ImageFile"));
+				}
+
+			},
+			error: function(error) {
+				console.log(error);
+			}
+		});
+
+
+	}
+
 })
 
 .controller('LoginCtrl', function($scope, $localstorage, $state, Data, $cordovaNetwork, $ionicPopup, $cordovaToast,$ionicLoading) {
