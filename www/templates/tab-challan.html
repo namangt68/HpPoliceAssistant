@@ -33,6 +33,11 @@
     </ion-input>
 
     <ion-input class="item item-input item-stacked-label">
+      <ion-label>Vehicle Number</ion-label>
+      <input type="text" placeholder="Enter Vehicle Number Here" ng-model="data.vehicleNum">
+    </ion-input>
+
+    <ion-input class="item item-input item-stacked-label">
       <ion-label>Name of Place</ion-label>
       <input type="text" placeholder="Enter Place Name Here" ng-model="data.place">
     </ion-input>
@@ -46,7 +51,7 @@
     </ion-input>
 
     <ion-input class="item item-input item-stacked-label">
-      <ion-label>GPS Location<br>{{gps.latitude.toFixed(2)}}, {{gps.longitude.toFixed(2)}}</ion-label>
+      <ion-label>GPS Location<br>12.45, 12.4<!-- {{gps.latitude.toFixed(2)}}, {{gps.longitude.toFixed(2)}} --></ion-label>
     </ion-input>
 
       <button class="button button-block button-positive" ng-click="captureImage()">Upload Image</button>

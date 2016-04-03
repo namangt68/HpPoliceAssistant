@@ -62,11 +62,12 @@ angular.module('starter.controllers', ['ngCordova'])
 
 		challan.set("Offences", $scope.data.offence);
 		challan.set("OffencesSection", $scope.data.section);
+		challan.set("Vehicle Number", $scope.data.vehicleNum);
 		challan.set("Place", $scope.data.place);
 		challan.set("imageFile", imageFile);
 
-		var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
-		challan.set("GPS", point);
+	//	var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
+	//	challan.set("GPS", point);
 
 		challan.save(null, {
 			success: function(challan) {
