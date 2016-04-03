@@ -10,5 +10,13 @@
 	  </button>
 	</div>
 
+	<div class="list list-inset" ng-if="vehicles">
+	    <a class="item"  ng-repeat="vehicle in vehicles">
+	      <h2>{{vehicle.vehicleNum}}</h2>
+	      <p>{{vehicle.district}}</p>
+	      <p>{{vehicle.policeStation}}</p>
+	    </a>
+    </div>
+
   </ion-content>
 </ion-view>

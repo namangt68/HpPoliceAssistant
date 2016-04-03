@@ -302,7 +302,7 @@ angular.module('starter.controllers', ['ngCordova'])
 	}
 })
 
-.controller('StolenCtrl', function($scope, $ionicFilterBar, $cordovaToast) {
+.controller('StolenCtrl', function($scope, $state, $ionicFilterBar, $cordovaToast) {
 
 	var VehicleStolen = Parse.Object.extend("VehicleStolen");
 	var query = new Parse.Query(VehicleStolen);
@@ -319,6 +319,7 @@ angular.module('starter.controllers', ['ngCordova'])
 				$scope.vehicles.push(item);
 			}
 			console.log($scope.vehicles);
+			$state.go($state.current, {}, {reload: true});
 		},
 		error: function(error){
 			console.log(error);
@@ -387,13 +388,20 @@ angular.module('starter.controllers', ['ngCordova'])
 		query.equalTo("vehicleNum", $scope.data.search);
 		query.find({
 			success: function(results) {
-
+				$scope.vehicles = [];
 				for (var i = results.length - 1; i >= 0; i--) {
 					console.log(i);
 					console.log(results[i].get("description"));
 					console.log(results[i].get("ImageFile"));
+					var item = {
+						vehicleNum: results[i].get('vehicleNum'),
+						district: results[i].get('district'),
+						policeStation: results[i].get('policeStation')
+					};
+					$scope.vehicles.push(item);
 				}
-
+				console.log($scope.vehicles);
+				$state.go($state.current, {}, {reload: true});
 			},
 			error: function(error) {
 				console.log(error);
