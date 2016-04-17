@@ -1,7 +1,108 @@
 angular.module('starter.controllers', ['ngCordova'])
 
-.controller('ChallanCtrl', function($scope, $cordovaGeolocation, $cordovaCamera, $ionicPopup, $cordovaToast){
+.controller('ChallanCtrl', function($scope, $cordovaGeolocation, $cordovaCamera, $ionicPopup, $cordovaToast, $cordovaNetwork, $rootScope, $localstorage){
 	console.log('ChallanCtrl');
+
+	// listen for Online event
+	$rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+		
+		var offlineState = networkState;
+		console.log(networkState);
+
+		var data = $localstorage.get('challan_data');
+		if(Object.keys(data).length != 0){
+			
+			if(window.cordova){$cordovaToast.show('Pending data submission in progress.', 'short', 'bottom');}
+			// var VehicleEntry = Parse.Object.extend("VehicleEntry");
+			var Challan = Parse.Object.extend("Challan");
+			for (var i = 0; i< data.length; i++) {
+
+
+				
+				console.log(data[i]);
+				
+				// 
+
+				var challan = new Challan();
+
+				var base64 = data[i].image;
+				var imageFile = new Parse.File(Date.now().toString() + '.jpg', { base64: base64 });
+
+				challan.set("Offences", data[i].offence);
+				challan.set("OffencesSection", data[i].section);
+				challan.set("Vehicle Number", data[i].vehicleNum);
+				challan.set("Place", data[i].place);
+				challan.set("imageFile", imageFile);
+
+			//	var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
+			//	challan.set("GPS", point);
+
+				challan.save(null, {
+					success: function(challan) {
+						console.log('New object created with objectId: ' + challan.id);
+						// $ionicPopup.alert({
+							// title: 'Success',
+							// template: 'Challan entry was successfully submitted.'
+						// });
+					},
+					error: function(VehicleEntry) {
+						console.log('No object created');
+						$ionicPopup.alert({
+							title: 'Error',
+							template: 'Error occured during Challan submittion.'
+						});
+					}
+				});	
+
+				// 
+
+
+				
+				// var vehicleEntry = new VehicleEntry();
+
+				// var base64 = data[i].image;
+				// var imageFile = new Parse.File(Date.now().toString() + '.jpg', { base64: base64 });
+
+				// vehicleEntry.set("district", $localstorage.gets('district'));
+				// vehicleEntry.set("policeStation", $localstorage.gets('policeStation'));
+				// vehicleEntry.set("policePost", $localstorage.gets('policePost'));
+				// vehicleEntry.set("nakaAddress", $localstorage.gets('naka'));
+				// vehicleEntry.set("phoneNumInt", data[i]["phone"]);
+				// vehicleEntry.set("vehicleNum", data[i]["vehicle"]);
+				// vehicleEntry.set("description", data[i]["info"]);
+				// vehicleEntry.set("ImageFile", imageFile);
+				
+				// vehicleEntry.save(null, {
+				// 	success: function(VehicleEntry) {
+				// 		console.log('New object created with objectId: ' + vehicleEntry.id);
+				// 		// $ionicPopup.alert({
+				// 		// 	title: 'Success',
+				// 		// 	template: 'Entry was successfully submitted.'
+				// 	 //   	});
+				// 		// $-cordovaToast.show('Data successfully submitted !', 'short', 'bottom');
+				// 	},
+				// 	error: function(VehicleEntry) {
+				// 		console.log('No object created');
+				// 		$ionicPopup.alert({
+				// 			title: 'Error',
+				// 			template: 'Error occurred in pending data submission.'
+				// 		});
+				// 		// $-cordovaToast.show('Error occurred in data submission !', 'short', 'bottom');
+				// 	}
+				// });
+
+			};
+
+			if(window.cordova){$cordovaToast.show('Pending data successfully submitted !', 'short', 'bottom');}
+			$localstorage.set('challan_data', {});
+		}
+
+	})
+
+
+
+
+
 
 	$scope.captureImage = function() {
 		var options = {
@@ -54,44 +155,64 @@ angular.module('starter.controllers', ['ngCordova'])
 
 		if(window.cordova){$cordovaToast.show('Challan submission in progress.', 'short', 'bottom');}
 
-		var Challan = Parse.Object.extend("Challan");
-		var challan = new Challan();
+		if ($cordovaNetwork.isOnline()) {
+			var Challan = Parse.Object.extend("Challan");
+			var challan = new Challan();
 
-		var base64 = $scope.data.image;
-		var imageFile = new Parse.File(Date.now().toString() + '.jpg', { base64: base64 });
+			var base64 = $scope.data.image;
+			var imageFile = new Parse.File(Date.now().toString() + '.jpg', { base64: base64 });
 
-		challan.set("Offences", $scope.data.offence);
-		challan.set("OffencesSection", $scope.data.section);
-		challan.set("Vehicle Number", $scope.data.vehicleNum);
-		challan.set("Place", $scope.data.place);
-		challan.set("imageFile", imageFile);
+			challan.set("Offences", $scope.data.offence);
+			challan.set("OffencesSection", $scope.data.section);
+			challan.set("Vehicle Number", $scope.data.vehicleNum);
+			challan.set("Place", $scope.data.place);
+			challan.set("imageFile", imageFile);
 
-	//	var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
-	//	challan.set("GPS", point);
+		//	var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
+		//	challan.set("GPS", point);
 
-		challan.save(null, {
-			success: function(challan) {
-				console.log('New object created with objectId: ' + challan.id);
-				$ionicPopup.alert({
-					title: 'Success',
-					template: 'Challan entry was successfully submitted.'
-				});
-			},
-			error: function(VehicleEntry) {
-				console.log('No object created');
-				$ionicPopup.alert({
-					title: 'Error',
-					template: 'Error occured during Challan submittion.'
-				});
+			challan.save(null, {
+				success: function(challan) {
+					console.log('New object created with objectId: ' + challan.id);
+					$ionicPopup.alert({
+						title: 'Success',
+						template: 'Challan entry was successfully submitted.'
+					});
+				},
+				error: function(VehicleEntry) {
+					console.log('No object created');
+					$ionicPopup.alert({
+						title: 'Error',
+						template: 'Error occured during Challan submittion.'
+					});
+				}
+			});
+
+			$scope.data = {};
+			$scope.data.offence = []
+
+			var d = new Date();
+			$scope.data.date = d.toDateString();
+			$scope.data.time = d.toTimeString().slice(0,8);
+		} else {
+
+			if(window.cordova){$cordovaToast.show('Challan will be submitted when connected to internet.', 'short', 'bottom');}
+			
+			var data = $localstorage.get('challan_data');
+			if(Object.keys(data).length === 0){			
+				console.log('Data queued for offline storage');
+				data = [];
 			}
-		});
+			
+			data.unshift($scope.data);
+			$localstorage.set('challan_data', data);
+			
+			$scope.data = {};
+			$scope.data.offence = []
 
-		$scope.data = {};
-		$scope.data.offence = []
-
-		var d = new Date();
-		$scope.data.date = d.toDateString();
-		$scope.data.time = d.toTimeString().slice(0,8);
+			var d = new Date();
+			$scope.data.date = d.toDateString();
+			$scope.data.time = d.toTimeString().slice(0,8);		}
 	}
 
 
