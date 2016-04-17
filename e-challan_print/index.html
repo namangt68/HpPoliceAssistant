@@ -1,0 +1,115 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Print HP E-challan</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
+</head>
+
+<body>
+  
+  <div id="main">
+      <style type="text/css">
+    .tg  {border-collapse:collapse;border-spacing:0;}
+    .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+    .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+    .tg .tg-1d7g{font-weight:bold;font-size:16px;vertical-align:top}
+    .tg .tg-yw4l{vertical-align:top}
+    </style>
+    <FORM align="Center">
+    <input type="button"  value="Print" onclick="window.print()" />
+</FORM>
+
+    <table class="tg" id="results-table">
+      
+    </table>  
+      
+  </div>
+  <script type="text/javascript">
+    Parse.initialize("nKHMuBAtrvQPDbGmmXDfqrOCloh92L5u3uif8OPA", "186FSkeCcmLJ5kGtUV7212MASXq3X1PQQAXQMpV5");
+    
+    
+var offence = [];
+
+offence[0] = "w/o Helmet";
+    offence[1] = "w/o RC";
+    offence[2] = "w/o Insurance";
+    offence[3] = "w/o License"   ;
+    offence[4] = "Rash & Negligent Driving";
+    offence[5] = "Using Mobile Phone driving";   
+    offence[6] = "w/o Number Plate";
+    offence[7] = "Using Pressure Horn";
+    offence[8] = "w/o Seat Belt";
+    offence[9] = "Triple Ridng";
+    offence[10] = "Others";
+
+
+
+    var vehicleEntry = Parse.Object.extend("Challan");
+    var query = new Parse.Query(vehicleEntry);
+    //query.equalTo("playerName", "Dan Stemkoski");
+    query.find({
+      success: function(results) {
+        //alert("Successfully retrieved " + results.length + " scores.");
+        // Do something with the returned Parse.Object values
+        for (var i = 0; i < results.length; i++) {
+          var object = results[i];
+          console.log(object.get('Offences'));
+          var str = '';
+          for(j = 0; j < object.get('Offences').length; j++) {
+            console.log(object.get('Offences')[j]);
+            if(object.get('Offences')[j] === true) {
+              str += offence[j] + ', ';
+            } 
+          }
+                    console.log(object.get("Place"));
+              (function($) {
+           $('#results-table').append('<tr>' + 
+        '<th align="center" class="tg-1d7g" colspan="3"><br><br>HP Police e-Challan</th>' +
+      '</tr>' +
+      '<tr>' +
+        '<td class="tg-yw4l">Vehicle No.:</td>' +
+        '<td class="tg-yw4l">' + object.get('vehicleNum') +  '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td class="tg-yw4l">Place:</td>' +
+        '<td class="tg-yw4l">' + object.get('Place') +  '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td class="tg-yw4l">Date:</td>' +
+        '<td class="tg-yw4l">' + object.get('createdAt') +  '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td class="tg-yw4l">Offence Section:</td>' +
+        '<td class="tg-yw4l">' + object.get('OffencesSection') +  '</td>' +
+      '</tr>' +
+      '<tr>' +
+        '<td class="tg-yw4l">Offence:</td>' +
+        '<td class="tg-yw4l"><b>' +  str  +  '</b></td>' +
+      '</tr>' + 
+      '<tr>' +
+        '<td class="tg-yw4l">Photo:</td>' +
+        '<td class="tg-yw4l">' + '<img align="middle" src="'
+        );
+       if(object.get('imageFile')) {
+          $('#results-table').append('<tr>' +  object.get('imageFile').url() + '" height="100" width="100">'+  '</td>' +
+          '</tr>')     
+       }
+     
+        })(jQuery);
+      
+        }
+      },
+      error: function(error) {
+        alert("Error: " + error.code + " " + error.message);
+      }
+    });
+  </script>
+</body>
+
+</html>
