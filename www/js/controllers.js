@@ -2,7 +2,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
 .controller('ChallanCtrl', function($scope, $cordovaGeolocation, $cordovaCamera, $ionicPopup, $cordovaToast, $cordovaNetwork, $rootScope, $localstorage){
 	console.log('ChallanCtrl');
-
 	// listen for Online event
 	$rootScope.$on('$cordovaNetwork:online', function(event, networkState){
 		
@@ -101,9 +100,6 @@ angular.module('starter.controllers', ['ngCordova'])
 
 
 
-
-
-
 	$scope.captureImage = function() {
 		var options = {
 		  quality: 10,
@@ -129,23 +125,25 @@ angular.module('starter.controllers', ['ngCordova'])
 	$scope.$on('$ionicView.enter', function(){
 		$scope.data = {}
 		$scope.data.offence = []
-
+		$scope.gpsLocation = "";
 		if (window.cordova) {
-			var posOptions = {timeout: 1000, enableHighAccuracy: true};
+			var posOptions = {timeout: 60000, enableHighAccuracy: false};
 			$cordovaGeolocation
 			    .getCurrentPosition(posOptions)
 			    .then(function (position) {
 			    	$scope.gps = position.coords;
+			    	$scope.gpsLocation = position.coords.latitude.toFixed(2) + ", " + position.coords.longitude.toFixed(2);
+			    	
 			    }, function(err) {
 			    	console.log('Error in $cordovaGeolocation: ', err);
-			    	$scope.gps = {latitude: 13.32, longitude: -13.32};
+			    	$scope.gps = {latitude: -1, longitude: -1};
 			    });
 		} else {
 			navigator.geolocation.getCurrentPosition(function(x){
 				$scope.gps = x.coords;
+				$scope.gpsLocation = x.coords.latitude.toFixed(2) + ", " + x.coords.longitude.toFixed(2);
 			});	
 		}
-		
 		var d = new Date();
 		$scope.data.date = d.toDateString();
 		$scope.data.time = d.toTimeString().slice(0,8);
@@ -153,8 +151,18 @@ angular.module('starter.controllers', ['ngCordova'])
 
 	$scope.onChallanSubmit = function(){
 
+		var offences = ["w/o Helmet", "w/o RC", "w/o Insurance", "w/o License", "Rash & Negligent Driving", "Using Mobile Phone driving", "w/o Number Plate", "Using Pressure Horn", "w/o Seat Belt", "Triple Ridng", "Idle Parking", "Sealed/Restricted road Violation", "Others (Specify below)"];
+	    var offencesChecked = [];
+	    for(var i = 0; i < offences.length-1; i++) {
+	    	if($scope.data.offence[i] == true) {
+	    		offencesChecked.push(offences[i]);
+	    	}
+	    }
+	    offencesChecked.push($scope.data.info);
+	    $scope.data.offence = offencesChecked;
+	    console.log(offencesChecked);
 		if(window.cordova){$cordovaToast.show('Challan submission in progress.', 'short', 'bottom');}
-
+		console.log($scope.gpsLocation);
 		if ($cordovaNetwork.isOnline()) {
 			var Challan = Parse.Object.extend("Challan");
 			var challan = new Challan();
@@ -162,11 +170,17 @@ angular.module('starter.controllers', ['ngCordova'])
 			var base64 = $scope.data.image;
 			var imageFile = new Parse.File(Date.now().toString() + '.jpg', { base64: base64 });
 
+
 			challan.set("Offences", $scope.data.offence);
 			challan.set("OffencesSection", $scope.data.section);
-			challan.set("Vehicle Number", $scope.data.vehicleNum);
+			challan.set("vehicleNum", $scope.data.vehicleNum);
 			challan.set("Place", $scope.data.place);
+			//challan.set("GPS", $scope.gpsLocation);
 			challan.set("imageFile", imageFile);
+			challan.set("district", $localstorage.gets('district'));
+			challan.set("policeStation", $localstorage.gets('policeStation'));
+			challan.set("policePost", $localstorage.gets('policePost'));
+			challan.set("nakaAddress", $localstorage.gets('naka'));
 
 		//	var point = new Parse.GeoPoint({latitude: $scope.gps.latitude, longitude: $scope.gps.longitude});
 		//	challan.set("GPS", point);
@@ -543,8 +557,12 @@ angular.module('starter.controllers', ['ngCordova'])
 
 	$scope.selected = {};
 	$scope.loginInfo = Data.loginInfo;
-	$scope.districts = Object.keys(Data.loginInfo);
+	$scope.loginInfoPwd = Data.loginInfoPwd;
+	$scope.districts = Object.keys(Data.loginInfoPwd);
 
+	console.log("loginInfoPwd is: ");
+	console.log($scope.loginInfoPwd);
+	console.log($scope.districts);
 	$scope.onLoginSubmit = function(){
 		// $-cordovaToast.show('Verifying credentials.', 'short', 'bottom');
 		$ionicLoading.show({
@@ -568,6 +586,7 @@ angular.module('starter.controllers', ['ngCordova'])
 						$ionicLoading.hide();
 						if (results.length === 1){
 							var password = results[0].get("password");
+							console.log(password);
 							if (password === $scope.selected.password) {
 								console.log('Logging In...');
 								$localstorage.set('isAuthorized', true);
@@ -596,27 +615,15 @@ angular.module('starter.controllers', ['ngCordova'])
 						console.log(error);
 					}
 				});
-			} else{
-
+			} 
+			else{
 				$ionicLoading.hide();
-
-				if ($scope.selected.district === 'Mandi' &&
-					$scope.selected.police === 'Sadar Mandi' &&
-					$scope.selected.password === 'password') {
-
+				if($scope.loginInfoPwd[$scope.selected.district][$scope.selected.police] === $scope.selected.password) {
 					console.log('Logging In...');
 					$localstorage.set('isAuthorized', true);
 					$state.go('tab.entry');
-
-				} else if ($scope.selected.district === 'Bilaspur' &&
-					$scope.selected.police === 'Sadar Bilaspur' &&
-					$scope.selected.password === 'pass') {
-
-					console.log('Logging In...');
-					$localstorage.set('isAuthorized', true);
-					$state.go('tab.entry');
-
-				} else {
+				}
+				else {
 					$ionicPopup.alert({
 						title: 'No Internet Connection',
 						template: 'Please connect to internet and try again.'

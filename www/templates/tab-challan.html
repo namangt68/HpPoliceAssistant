@@ -18,6 +18,8 @@
     <ion-checkbox ng-model="data.offence[7]">Using Pressure Horn</ion-checkbox>
     <ion-checkbox ng-model="data.offence[8]">w/o Seat Belt</ion-checkbox>
     <ion-checkbox ng-model="data.offence[9]">Triple Ridng</ion-checkbox>
+    <ion-checkbox ng-model="data.offence[11]">Idle Parking</ion-checkbox>
+    <ion-checkbox ng-model="data.offence[12]">Sealed/Restricted road Violation</ion-checkbox>
     <ion-checkbox ng-model="data.offence[10]">Others (Specify below)</ion-checkbox>
 
     <ion-input class="item item-input item-stacked-label">
@@ -51,7 +53,7 @@
     </ion-input>
 
     <ion-input class="item item-input item-stacked-label">
-      <ion-label>GPS Location<br>12.45, 12.4<!-- {{gps.latitude.toFixed(2)}}, {{gps.longitude.toFixed(2)}} --></ion-label>
+      <ion-label>GPS Location<br>{{gps.latitude.toFixed(2)}}, {{gps.longitude.toFixed(2)}}</ion-label>
     </ion-input>
 
       <button class="button button-block button-positive" ng-click="captureImage()">Upload Image</button>
